@@ -21,7 +21,7 @@ def start(update, context):
 
 def message_url(update, context):
 
-    amazon_valid_urls = ['www.amzn.to', 'amzn.to',
+    amazon_valid_urls = ['www.amzn.to', 'amzn.to/',
                          'www.amazon.', 'amazon.']
 
     url = update.message.text
