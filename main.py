@@ -28,17 +28,15 @@ def message_url(update, context):
     domain = check_domain(update.message.text)
 
     if domain.startswith(tuple(amazon_valid_urls)):
-
         if 'amzn.to/' in domain:
-    try:
-        # Follow redirection to get the actual URL
-        url = requests.get(url).url
-        domain = check_domain(url)  # Update the domain
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Error resolving URL: {e}")
-        update.message.reply_text("There was an error resolving the shortened URL.")
-        return
-
+            try:
+                # Follow redirection to get the actual URL
+                url = requests.get(url).url
+                domain = check_domain(url)  # Update the domain
+            except requests.exceptions.RequestException as e:
+                logger.error(f"Error resolving URL: {e}")
+                update.message.reply_text("There was an error resolving the shortened URL.")
+                return
 
         product = Product(get_asin(url))
         message = amazon_message(product, update)
@@ -57,9 +55,12 @@ def main():
 
     dispatcher.add_handler(MessageHandler(Filters.regex('(?i)((?:https?://|www\d{0,3}[.])?[a-z0-9.\-]+[.](?:(?:com.br/)|(?:ca/)|(?:com.mx/)|(?:com/)|(?:cn/)|(?:in/)|(?:co.jp/)|(?:sg/)|(?:com.tr/)|(?:ae/)|(?:sa/)|(?:fr/)|(?:de/)|(?:it/)|(?:nl/)|(?:pl/)|(?:es/)|(?:se/)|(?:co.uk/)|(?:com.au/))(?:/[^\s()<>]+[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019])?)'), message_url))
 
+    # Start the webhook
+    updater.start_webhook(listen="0.0.0.0",
+                          port=port,
+                          url_path=bot_token,
+                          webhook_url=f"https://{os.getenv('RENDER_EXTERNAL_HOSTNAME')}/{bot_token}")
 
-    updater.start_webhook(listen="0.0.0.0", port=port, url_path=bot_token, webhook_url=f"https://{os.getenv('RENDER_EXTERNAL_HOSTNAME')}/{bot_token}")
-    
     updater.idle()
 
 if __name__ == '__main__':
