@@ -1,14 +1,15 @@
-
-import json
+import os
 from amazon_paapi import AmazonApi
 from .tools import check_domain # To return url with asin
 
-with open('config/credentials.json') as config_file:
-    config = json.load(config_file)
+amz_config = {
+    'KEY': os.getenv('AMAZON_KEY'),
+    'SECRET': os.getenv('AMAZON_SECRET'),
+    'TAG': os.getenv('AMAZON_TAG'),
+    'COUNTRY': os.getenv('AMAZON_COUNTRY')
+}
 
-amz_config = config['amazon']
-amazon = AmazonApi  (amz_config['KEY'], amz_config['SECRET'], amz_config['TAG'], amz_config['COUNTRY'])
-
+amazon = AmazonApi(amz_config['KEY'], amz_config['SECRET'], amz_config['TAG'], amz_config['COUNTRY'])
 
 class Product():
 
