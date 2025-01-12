@@ -30,7 +30,15 @@ def message_url(update, context):
     if domain.startswith(tuple(amazon_valid_urls)):
 
         if 'amzn.to/' in domain:
-            url = requests.get(url).url
+    try:
+        # Follow redirection to get the actual URL
+        url = requests.get(url).url
+        domain = check_domain(url)  # Update the domain
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error resolving URL: {e}")
+        update.message.reply_text("There was an error resolving the shortened URL.")
+        return
+
 
         product = Product(get_asin(url))
         message = amazon_message(product, update)
