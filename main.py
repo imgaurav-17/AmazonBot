@@ -21,7 +21,7 @@ def start(update, context):
 
 def message_url(update, context):
 
-    amazon_valid_urls = ['www.amzn.to', 'amzn.to/',
+    amazon_valid_urls = ['www.amzn.to/', 'amzn.to/',
                          'www.amazon.', 'amazon.']
 
     url = update.message.text
@@ -56,8 +56,7 @@ def main():
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
-
-    dispatcher.add_handler(MessageHandler(Filters.regex('(?i)((?:https?://|www\d{0,3}[.])?[a-z0-9.\-]+[.](?:(?:com.br/)|(?:ca/)|(?:com.mx/)|(?:com/)|(?:cn/)|(?:in/)|(?:co.jp/)|(?:sg/)|(?:com.tr/)|(?:ae/)|(?:sa/)|(?:fr/)|(?:de/)|(?:it/)|(?:nl/)|(?:pl/)|(?:es/)|(?:se/)|(?:co.uk/)|(?:com.au/)|(?:amzn.to/))(?:/[^\s()<>]+[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019])?)'), message_url))
+    dispatcher.add_handler(MessageHandler(Filters.regex(r'(?i)((?:https?://|www\d{0,3}[.])?[a-z0-9.\-]+[.](?:(?:com.br/)|(?:ca/)|(?:com.mx/)|(?:com/)|(?:cn/)|(?:in/)|(?:co.jp/)|(?:sg/)|(?:com.tr/)|(?:ae/)|(?:sa/)|(?:fr/)|(?:de/)|(?:it/)|(?:nl/)|(?:pl/)|(?:es/)|(?:se/)|(?:co.uk/)|(?:com.au/)|(?:amzn.to/))(?:/[^\s()<>]+[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019])?)'), message_url))
 
     # Start the webhook
     updater.start_webhook(listen="0.0.0.0",
