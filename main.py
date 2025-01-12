@@ -40,6 +40,7 @@ def message_url(update, context):
 def main():
     # Load Telegram BOT-TOKEN from environment variables
     bot_token = os.getenv('BOT_TOKEN')
+    port = int(os.environ.get('PORT', '8443'))
 
     updater = Updater(bot_token, use_context=True)
     dispatcher = updater.dispatcher
@@ -49,7 +50,8 @@ def main():
     dispatcher.add_handler(MessageHandler(Filters.regex('(?i)((?:https?://|www\d{0,3}[.])?[a-z0-9.\-]+[.](?:(?:com.br/)|(?:ca/)|(?:com.mx/)|(?:com/)|(?:cn/)|(?:in/)|(?:co.jp/)|(?:sg/)|(?:com.tr/)|(?:ae/)|(?:sa/)|(?:fr/)|(?:de/)|(?:it/)|(?:nl/)|(?:pl/)|(?:es/)|(?:se/)|(?:co.uk/)|(?:com.au/))(?:/[^\s()<>]+[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019])?)'), message_url))
 
 
-    updater.start_polling()
+    updater.start_webhook(listen="0.0.0.0", port=port, url_path=bot_token, webhook_url=f"https://{os.getenv('RENDER_EXTERNAL_HOSTNAME')}/{bot_token}")
+    
     updater.idle()
 
 if __name__ == '__main__':
