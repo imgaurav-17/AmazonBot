@@ -25,13 +25,17 @@ def message_url(update, context):
                          'www.amazon.', 'amazon.']
 
     url = update.message.text
+    logger.info(f"Received URL: {url}")
     domain = check_domain(update.message.text)
+    logger.info(f"Domain: {domain}")
 
     if domain.startswith(tuple(amazon_valid_urls)):
         if 'amzn.to/' in domain:
             try:
                 # Follow redirection to get the actual URL
+                logger.info("Shortened URL detected, following redirection...")
                 url = requests.get(url).url
+                logger.info(f"Expanded URL: {url}")
                 domain = check_domain(url)  # Update the domain
             except requests.exceptions.RequestException as e:
                 logger.error(f"Error resolving URL: {e}")
