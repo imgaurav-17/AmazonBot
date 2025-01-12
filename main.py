@@ -61,7 +61,7 @@ def main():
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(MessageHandler(Filters.regex(r'(https?://)?(www\.)?(amzn\.to/|amazon\.[a-z]{2,3}(\.[a-z]{2})?/[^ ]*)'), message_url))dispatcher.add_handler(MessageHandler(Filters.regex(r'(https?://)?(www\.)?(amzn\.to/|amazon\.[a-z]{2,3}(\.[a-z]{2})?/[^ ]*)'), message_url))
+    dispatcher.add_handler(MessageHandler(Filters.regex(r'(https?://)?(www\.)?(amzn\.to/|amazon\.[a-z]{2,3}(\.[a-z]{2})?/[^ ]*)'), message_url))
 
     # Start the webhook
     updater.start_webhook(listen="0.0.0.0",
