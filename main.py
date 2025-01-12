@@ -34,7 +34,10 @@ def message_url(update, context):
             try:
                 # Follow redirection to get the actual URL
                 logger.info("Shortened URL detected, following redirection...")
-                url = requests.get(url).url
+                response = requests.get(url)
+                logger.info(f"HTTP status code: {response.status_code}")
+                logger.info(f"Response headers: {response.headers}")
+                url = response.url
                 logger.info(f"Expanded URL: {url}")
                 domain = check_domain(url)  # Update the domain
             except requests.exceptions.RequestException as e:
@@ -42,7 +45,9 @@ def message_url(update, context):
                 update.message.reply_text("There was an error resolving the shortened URL.")
                 return
 
-        product = Product(get_asin(url))
+        asin = get_asin(url)
+        logger.info(f"Extracted ASIN: {asin}")
+        product = Product(asin)
         message = amazon_message(product, update)
         context.bot.send_message(update.message.chat_id, message[0], reply_markup=message[1], parse_mode='HTML')
         context.bot.delete_message(update.message.chat_id, update.message.message_id)
