@@ -28,8 +28,9 @@ def message_url(update, context):
 
     # Extract URL from the message text
     url = None
-    for word in message_text.split():
-        if any(word.startswith(vu) for vu in amazon_valid_urls):
+    words = message_text.split()
+    for word in words:
+        if any(valid_url in word for valid_url in amazon_valid_urls):
             url = word
             break
 
