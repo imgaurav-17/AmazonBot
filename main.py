@@ -20,13 +20,25 @@ def start(update, context):
     update.message.reply_text('Send me links from Amazon! I will give you back a nice post.')
 
 def message_url(update, context):
-
     amazon_valid_urls = ['www.amzn.to/', 'amzn.to/',
                          'www.amazon.', 'amazon.']
 
-    url = update.message.text
-    logger.info(f"Received URL: {url}")
-    domain = check_domain(update.message.text)
+    message_text = update.message.text
+    logger.info(f"Received URL: {message_text}")
+
+    # Extract URL from the message text
+    url = None
+    for word in message_text.split():
+        if any(word.startswith(vu) for vu in amazon_valid_urls):
+            url = word
+            break
+
+    if not url:
+        logger.error("No valid URL found in the message.")
+        update.message.reply_text("No valid URL found in the message.")
+        return
+
+    domain = check_domain(url)
     logger.info(f"Domain: {domain}")
 
     if domain.startswith(tuple(amazon_valid_urls)):
