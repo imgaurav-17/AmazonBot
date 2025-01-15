@@ -1,7 +1,7 @@
 import logging
 import os
 import requests
-from telegram import Update
+from telegram import Update, Chat
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from amazon_paapi import get_asin
 from utils.create_message import amazon_message
@@ -65,11 +65,22 @@ def message_url(update, context):
         
         # Send the message to the user
         context.bot.send_message(update.message.chat_id, message[0], reply_markup=message[1], parse_mode='HTML')
-        context.bot.delete_message(update.message.chat_id, update.message.message_id)
         
+        # Check if the message is from a private chat
+        if update.message.chat.type not in [Chat.GROUP, Chat.SUPERGROUP]:
+            try:
+                # Attempt to delete the original message
+                context.bot.delete_message(update.message.chat_id, update.message.message_id)
+            except Exception as e:
+                logger.error(f"Error deleting message: {e}")
+
         # Forward the message to the channel
         channel_id = os.getenv('CHANNEL_ID')  # Get your channel ID from environment variables
-        context.bot.send_message(channel_id, message[0], reply_markup=message[1], parse_mode='HTML')
+        if channel_id:
+            logger.info(f"Forwarding message to channel: {channel_id}")
+            context.bot.send_message(channel_id, message[0], reply_markup=message[1], parse_mode='HTML')
+        else:
+            logger.error("CHANNEL_ID environment variable is not set.")
 
 def main():
     # Load Telegram BOT-TOKEN from environment variables
