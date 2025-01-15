@@ -21,7 +21,7 @@ def start(update, context):
 
 def message_url(update, context):
     amazon_valid_urls = ['www.amzn.to/', 'amzn.to/', 'www.amzn.in/', 'amzn.in/',
-                     'www.amazon.', 'amazon.']
+                         'www.amazon.', 'amazon.']
 
     message_text = update.message.text
     logger.info(f"Received URL: {message_text}")
@@ -43,7 +43,7 @@ def message_url(update, context):
     logger.info(f"Domain: {domain}")
 
     if domain.startswith(tuple(amazon_valid_urls)):
-        if 'amzn.to/' in domain:
+        if 'amzn.to/' in domain or 'amzn.in/' in domain:
             try:
                 # Follow redirection to get the actual URL
                 logger.info("Shortened URL detected, following redirection...")
