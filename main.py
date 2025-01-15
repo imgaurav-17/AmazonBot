@@ -20,8 +20,8 @@ def start(update, context):
     update.message.reply_text('Send me links from Amazon! I will give you back a nice post.')
 
 def message_url(update, context):
-    amazon_valid_urls = ['www.amzn.to/', 'amzn.to/',
-                         'www.amazon.', 'amazon.']
+    amazon_valid_urls = ['www.amzn.to/', 'amzn.to/', 'www.amzn.in/', 'amzn.in/',
+                     'www.amazon.', 'amazon.']
 
     message_text = update.message.text
     logger.info(f"Received URL: {message_text}")
@@ -74,7 +74,7 @@ def main():
     dispatcher = updater.dispatcher
 
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(MessageHandler(Filters.regex(r'(https?://)?(www\.)?(amzn\.to/|amazon\.[a-z]{2,3}(\.[a-z]{2})?/[^ ]*)'), message_url))
+    dispatcher.add_handler(MessageHandler(Filters.regex(r'(https?://)?(www\.)?(amzn\.to/|amzn\.in/|amazon\.[a-z]{2,3}(\.[a-z]{2})?/[^ ]*)'), message_url))
 
     # Start the webhook
     updater.start_webhook(listen="0.0.0.0",
