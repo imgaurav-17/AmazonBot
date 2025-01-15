@@ -62,12 +62,19 @@ def message_url(update, context):
         logger.info(f"Extracted ASIN: {asin}")
         product = Product(asin)
         message = amazon_message(product, update)
+        
+        # Send the message to the user
         context.bot.send_message(update.message.chat_id, message[0], reply_markup=message[1], parse_mode='HTML')
         context.bot.delete_message(update.message.chat_id, update.message.message_id)
+        
+        # Forward the message to the channel
+        channel_id = os.getenv('CHANNEL_ID')  # Get your channel ID from environment variables
+        context.bot.send_message(channel_id, message[0], reply_markup=message[1], parse_mode='HTML')
 
 def main():
     # Load Telegram BOT-TOKEN from environment variables
     bot_token = os.getenv('BOT_TOKEN')
+    channel_id = os.getenv('CHANNEL_ID')
     port = int(os.environ.get('PORT', '8443'))
 
     updater = Updater(bot_token, use_context=True)
